@@ -58,7 +58,116 @@
 		localStorage.setItem('login', 'false');
 		loginStatus = false;
 	}
+
+	// FORMULARIO
+
+	let showForm: boolean = $state(false);
+
+	function toggleForm() {
+		showForm = !showForm;
+	}
+	// authType true = login
+	function toggleAuth() {
+		authType = !authType;
+	}
+
+	let authType: boolean = $state(true);
 </script>
+
+<!-- FORMULARIO -->
+
+{#if showForm}
+	<section class="modal-overlay fixed inset-0 flex items-center justify-center">
+		<div class="grid h-auto w-[450px] gap-y-2 rounded-xl bg-white p-6 shadow-2xl">
+			<div class="flex justify-between">
+				{#if authType}
+					<h1 class="f1 mb-6 text-center font-bold">
+						Sing In <span class="f2 text-sm font-extralight"
+							>already have an account? <button
+								onclick={toggleAuth}
+								class="cursor-pointer hover:text-blue-600">Login</button
+							></span
+						>
+					</h1>
+				{:else}
+					<h1 class="f1 mb-6 text-center font-bold">
+						Login <span class="f2 text-sm font-extralight"
+							>Need to create an account? <button
+								onclick={toggleAuth}
+								class="cursor-pointer hover:text-blue-600">Sing Up</button
+							></span
+						>
+					</h1>
+				{/if}
+				<button class="cursor-pointer" onclick={toggleForm}>
+					<span class="material-icons">close</span>
+				</button>
+			</div>
+
+			<hr
+				class="h-[1px] border-0 bg-gradient-to-r from-transparent via-black to-transparent shadow-2xl"
+			/>
+
+			{#if authType}
+				<div class="grid gap-y-2">
+					<label for="name">Name</label>
+					<input
+						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						type="text"
+						bind:value={name}
+					/>
+				</div>
+				<div class="grid gap-y-2">
+					<label for="username">Username</label>
+					<input
+						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						type="text"
+						bind:value={username}
+					/>
+				</div>
+				<div class="grid gap-y-2">
+					<label for="email">Email</label>
+					<input
+						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						type="email"
+						bind:value={email}
+					/>
+				</div>
+				<div class="grid gap-y-2">
+					<label for="password">Password</label>
+					<input
+						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						type="password"
+						bind:value={password}
+					/>
+				</div>
+			{:else}
+				<div class="grid gap-y-2">
+					<label for="email">Email</label>
+					<input
+						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						type="email"
+						bind:value={email}
+					/>
+				</div>
+				<div class="grid gap-y-2">
+					<label for="password">Password</label>
+					<input
+						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						type="password"
+						bind:value={password}
+					/>
+				</div>
+			{/if}
+			
+			<button
+				class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
+				>SUBMIT</button
+			>
+
+		</div>
+	</section>
+{/if}
 
 <hr
 	class="h-[1px] border-0 bg-gradient-to-r from-transparent via-black to-transparent shadow-2xl"
@@ -89,13 +198,17 @@
 				<button class="cursor-pointer"><span class="material-icons">notifications</span></button>
 				<button class="cursor-pointer"><span class="material-icons">settings</span></button>
 			{:else}
-				<a
-					class="rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
-					href="/register">Sing In</a
+				<button
+					id="registerID"
+					onclick={toggleForm}
+					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
+					>Sing In</button
 				>
-				<a
-					class="rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
-					href="/login">Sign Up</a
+				<button
+					id="loginID"
+					onclick={toggleForm}
+					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
+					>Sing Up</button
 				>
 			{/if}
 		</div>
@@ -120,12 +233,14 @@
 		{#if loginStatus}
 			<a
 				class="f1 cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
-				href="/register">PUBLISH NOW</a
+				href="/projects/new-submit">PUBLISH NOW</a
 			>
 		{:else}
-			<a
+			<button
+				id="registerID"
+				onclick={toggleForm}
 				class="f1 cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
-				href="/register">START NOW</a
+				>START NOW</button
 			>
 		{/if}
 	</div>
@@ -164,67 +279,64 @@
 
 <section class="container mx-auto mt-12 mb-6 flex items-start justify-between">
 	<div class="grid">
-		<h1 class="mb-3 font-semibold">Titulo</h1>
+		<h1 class="mb-3 font-semibold">Navegação</h1>
 		<div class="grid gap-y-1"></div>
-		<a href="/">Subtitulo</a>
-		<a href="/">Sobre Titulo</a>
-		<a href="/">Sobre Titulo</a>
-		<a href="/">Sobre Titulo</a>
+		<a href="/">Início</a>
+		<a href="/">Explorar Projetos</a>
+		<a href="/">Criadores em Destaque</a>
+		<a href="/">Categorias</a>
 	</div>
 	<div>
 		<h1 class="mb-3 font-semibold">Contato</h1>
 		<div class="grid gap-y-1">
 			<a href="/">Fale Conosco</a>
-			<a href="/">Suporte</a>
-			<a href="/">Suporte</a>
+			<a href="/">Ajuda Técnica</a>
+			<a href="/">Feedback</a>
 		</div>
 	</div>
 	<div>
-		<h1 class="mb-3 font-semibold">Serviços</h1>
+		<h1 class="mb-3 font-semibold">Recursos</h1>
 		<div class="grid gap-y-1">
-			<a href="/">Catálogo</a>
-			<a href="/">Preços</a>
-			<a href="/">Preços</a>
-			<a href="/">Preços</a>
+			<a href="/">Planos</a>
+			<a href="/">Ferramentas</a>
+			<a href="/">Integrações</a>
+			<a href="/">Tutoriais</a>
 		</div>
 	</div>
 	<div>
-		<h1 class="mb-3 font-semibold">Empresa</h1>
+		<h1 class="mb-3 font-semibold">Sobre Nós</h1>
 		<div class="grid gap-y-1">
-			<a href="/">Quem Somos</a>
-			<a href="/">Carreiras</a>
-			<a href="/">Carreiras</a>
-
-			<a href="/">Carreiras</a>
-			<a href="/">Carreiras</a>
+			<a href="/">Missão</a>
+			<a href="/">Equipe</a>
+			<a href="/">História</a>
+			<a href="/">Imprensa</a>
+			<a href="/">Parcerias</a>
 		</div>
 	</div>
 	<div>
-		<h1 class="mb-3 font-semibold">Ajuda</h1>
+		<h1 class="mb-3 font-semibold">Suporte</h1>
 		<div class="grid gap-y-1">
-			<a href="/">FAQ</a>
+			<a href="/">Perguntas Frequentes</a>
 			<a href="/">Central de Ajuda</a>
-			<a href="/">Central de Ajuda</a>
-
-			<a href="/">Central de Ajuda</a>
+			<a href="/">Status do Serviço</a>
+			<a href="/">Relatar Problema</a>
 		</div>
 	</div>
 	<div>
-		<h1 class="mb-3 font-semibold">Redes Sociais</h1>
+		<h1 class="mb-3 font-semibold">Conecte-se</h1>
 		<div class="grid gap-y-1">
-			<a href="/">Facebook</a>
+			<a href="/">LinkedIn</a>
 			<a href="/">Instagram</a>
-			<a href="/">Twitter</a>
+			<a href="/">YouTube</a>
 		</div>
 	</div>
 	<div>
-		<h1 class="mb-3 font-semibold">Blog</h1>
+		<h1 class="mb-3 font-semibold">Conteúdo</h1>
 		<div class="grid gap-y-1">
-			<a href="/">Últimas Notícias</a>
-			<a href="/">Artigos</a>
-			<a href="/">Artigos</a>
-
-			<a href="/">Artigos</a>
+			<a href="/">Blog</a>
+			<a href="/">Casos de Sucesso</a>
+			<a href="/">Dicas de Portfólio</a>
+			<a href="/">Entrevistas</a>
 		</div>
 	</div>
 	<div>
@@ -232,9 +344,10 @@
 		<div class="grid gap-y-1">
 			<a href="/">Política de Privacidade</a>
 			<a href="/">Termos de Uso</a>
-			<a href="/">Termos de Uso</a>
-			<a href="/">Termos de Uso</a>
-			<a href="/">Termos de Uso</a>
+			<a href="/">Direitos Autorais</a>
+			<a href="/">Cookies</a>
+			<a href="/">Licenciamento</a>
 		</div>
 	</div>
 </section>
+

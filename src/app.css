@@ -10,3 +10,7 @@
 .f3 {
     font: Poppins;
 }
+
+  .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
