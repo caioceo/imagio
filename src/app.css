@@ -1,1 +1,12 @@
 @import 'tailwindcss';
+
+.f1 {
+    font-family: Michroma;
+}
+.f2 {
+    font-family: Prompt;
+}
+
+.f3 {
+    font: Poppins;
+}
