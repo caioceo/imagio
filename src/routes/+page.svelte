@@ -6,7 +6,6 @@
 	let name: string = $state('');
 	let username: string = $state('');
 	let email: string = $state('');
-	let phone: string = $state('');
 	let password: string = $state('');
 
 	let loginStatus: boolean = $state(false);
@@ -18,10 +17,9 @@
 	async function Register() {
 		const userInfo = new FormData();
 
+		userInfo.append('email', email);
 		userInfo.append('name', name);
 		userInfo.append('username', username);
-		userInfo.append('email', email);
-		userInfo.append('phone', phone || '');
 		userInfo.append('password', password);
 
 		const reply = await fetch('api/register', {
@@ -65,6 +63,11 @@
 
 	function toggleForm() {
 		showForm = !showForm;
+		if (showForm){
+			document.body.style.overflow = 'hidden'
+		}
+		else
+			document.body.style.overflow = ''
 	}
 	// authType true = login
 	function toggleAuth() {
@@ -112,7 +115,7 @@
 				<div class="grid gap-y-2">
 					<label for="name">Name</label>
 					<input
-						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="text"
 						bind:value={name}
 					/>
@@ -120,7 +123,7 @@
 				<div class="grid gap-y-2">
 					<label for="username">Username</label>
 					<input
-						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="text"
 						bind:value={username}
 					/>
@@ -128,7 +131,7 @@
 				<div class="grid gap-y-2">
 					<label for="email">Email</label>
 					<input
-						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="email"
 						bind:value={email}
 					/>
@@ -136,7 +139,7 @@
 				<div class="grid gap-y-2">
 					<label for="password">Password</label>
 					<input
-						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="password"
 						bind:value={password}
 					/>
@@ -145,7 +148,7 @@
 				<div class="grid gap-y-2">
 					<label for="email">Email</label>
 					<input
-						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="email"
 						bind:value={email}
 					/>
@@ -153,7 +156,7 @@
 				<div class="grid gap-y-2">
 					<label for="password">Password</label>
 					<input
-						class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="password"
 						bind:value={password}
 					/>
@@ -185,7 +188,7 @@
 				bind:value={search}
 				type="text"
 				placeholder="Search for a profissional"
-				class="w-full rounded-xl border-1 border-gray-700 bg-gray-100 px-5 py-2 outline-none"
+				class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 			/>
 		</div>
 
