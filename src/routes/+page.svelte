@@ -69,7 +69,7 @@
 		else
 			document.body.style.overflow = ''
 	}
-	// authType true = login
+	// authType true = Sing Up
 	function toggleAuth() {
 		authType = !authType;
 	}
@@ -203,13 +203,13 @@
 			{:else}
 				<button
 					id="registerID"
-					onclick={toggleForm}
+					onclick={() => { toggleForm(); authType = true; }}
 					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
 					>Sing In</button
 				>
 				<button
 					id="loginID"
-					onclick={toggleForm}
+					onclick={() => { toggleForm(); authType = false; }}
 					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
 					>Sing Up</button
 				>
@@ -241,7 +241,7 @@
 		{:else}
 			<button
 				id="registerID"
-				onclick={toggleForm}
+				onclick={() => { toggleForm(); authType = true; }}
 				class="f1 cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
 				>START NOW</button
 			>
