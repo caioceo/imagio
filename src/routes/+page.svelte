@@ -7,8 +7,8 @@
 	let username: string = $state('');
 	let email: string = $state('');
 	let password: string = $state('');
-
 	let loginStatus: boolean = $state(false);
+	let errorMsg: string = $state('');
 
 	onMount(() => {
 		loginStatus = localStorage.getItem('login') === 'true';
@@ -31,7 +31,7 @@
 
 		if (result.success) {
 			toggleForm();
-		} else alert('Erro ao registrar usuário.');
+		} else errorMsg = result.error;
 	}
 
 	async function Login() {
@@ -48,10 +48,10 @@
 		const result = await reply.json();
 
 		if (result.success) {
-			showForm = false;
+			toggleForm();
 			localStorage.setItem('login', 'true');
 			loginStatus = true;
-		}
+		} else errorMsg = result.error;
 	}
 
 	function Logout() {
@@ -144,7 +144,11 @@
 						bind:value={password}
 					/>
 				</div>
-				<button onclick={Register} class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white">Register</button>
+				<button
+					onclick={Register}
+					class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
+					>Register</button
+				>
 			{:else}
 				<div class="grid gap-y-2">
 					<label for="email">Email</label>
@@ -162,7 +166,11 @@
 						bind:value={password}
 					/>
 				</div>
-				<button onclick={Login} class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white">Login</button>
+				<button
+					onclick={Login}
+					class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
+					>Login</button
+				>
 			{/if}
 		</div>
 	</section>
@@ -198,7 +206,6 @@
 				<button class="cursor-pointer"><span class="material-icons">settings</span></button>
 			{:else}
 				<button
-					id="registerID"
 					onclick={() => {
 						toggleForm();
 						authType = true;
@@ -242,7 +249,6 @@
 			>
 		{:else}
 			<button
-				id="registerID"
 				onclick={() => {
 					toggleForm();
 					authType = true;
