@@ -1,16 +1,13 @@
 @import 'tailwindcss';
 
 .f1 {
-    font-family: Michroma;
-}
-.f2 {
-    font-family: Prompt;
+  font-family: Michroma;
 }
 
-.f3 {
-    font: Poppins;
+* {
+  font-family: Prompt;
 }
 
-  .modal-overlay {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.2);
+}

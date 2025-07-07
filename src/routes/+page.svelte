@@ -202,8 +202,10 @@
 					class="rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
 					href="/publish-new-project">Upload</a
 				>
-				<button class="cursor-pointer"><span class="material-icons">notifications</span></button>
-				<button class="cursor-pointer"><span class="material-icons">settings</span></button>
+				<a
+					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
+					href="/">My space</a
+				>
 			{:else}
 				<button
 					onclick={() => {
