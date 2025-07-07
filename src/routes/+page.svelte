@@ -37,7 +37,7 @@
 	async function Login() {
 		const tryLogin = new FormData();
 
-		tryLogin.append('LoginId', username || email);
+		tryLogin.append('email', email);
 		tryLogin.append('password', password);
 
 		const reply = await fetch('api/user/login', {
@@ -48,9 +48,10 @@
 		const result = await reply.json();
 
 		if (result.success) {
+			showForm = false;
 			localStorage.setItem('login', 'true');
 			loginStatus = true;
-		} else alert('Usuário e/ou senha incorreto.');
+		}
 	}
 
 	function Logout() {
@@ -84,7 +85,7 @@
 			<div class="flex justify-between">
 				{#if authType}
 					<h1 class="f1 mb-6 text-center font-bold">
-						Sing In <span class="f2 text-sm font-extralight"
+						Register <span class="f2 text-sm font-extralight"
 							>already have an account? <button
 								onclick={toggleAuth}
 								class="cursor-pointer hover:text-blue-600">Login</button
@@ -96,7 +97,7 @@
 						Login <span class="f2 text-sm font-extralight"
 							>Need to create an account? <button
 								onclick={toggleAuth}
-								class="cursor-pointer hover:text-blue-600">Sing Up</button
+								class="cursor-pointer hover:text-blue-600">Register</button
 							></span
 						>
 					</h1>
@@ -143,6 +144,7 @@
 						bind:value={password}
 					/>
 				</div>
+				<button onclick={Register} class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white">Register</button>
 			{:else}
 				<div class="grid gap-y-2">
 					<label for="email">Email</label>
@@ -160,13 +162,8 @@
 						bind:value={password}
 					/>
 				</div>
+				<button onclick={Login} class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white">Login</button>
 			{/if}
-
-			<button
-				onclick={Register}
-				class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
-				>SUBMIT</button
-			>
 		</div>
 	</section>
 {/if}
@@ -207,7 +204,7 @@
 						authType = true;
 					}}
 					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
-					>Sing In</button
+					>Register</button
 				>
 				<button
 					id="loginID"
@@ -216,7 +213,7 @@
 						authType = false;
 					}}
 					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
-					>Sing Up</button
+					>Login</button
 				>
 			{/if}
 		</div>
