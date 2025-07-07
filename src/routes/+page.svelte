@@ -22,15 +22,16 @@
 		userInfo.append('username', username);
 		userInfo.append('password', password);
 
-		const reply = await fetch('api/register', {
+		const reply = await fetch('api/user/register', {
 			method: 'POST',
 			body: userInfo
 		});
 
 		const result = await reply.json();
+
 		if (result.success) {
-			alert('Usuário cadastrado');
-		} else alert('Erro ao registrar usuário, tente novamente.');
+			toggleForm();
+		} else alert('Erro ao registrar usuário.');
 	}
 
 	async function Login() {
@@ -39,7 +40,7 @@
 		tryLogin.append('LoginId', username || email);
 		tryLogin.append('password', password);
 
-		const reply = await fetch('api/login', {
+		const reply = await fetch('api/user/login', {
 			method: 'POST',
 			body: tryLogin
 		});
@@ -63,11 +64,9 @@
 
 	function toggleForm() {
 		showForm = !showForm;
-		if (showForm){
-			document.body.style.overflow = 'hidden'
-		}
-		else
-			document.body.style.overflow = ''
+		if (showForm) {
+			document.body.style.overflow = 'hidden';
+		} else document.body.style.overflow = '';
 	}
 	// authType true = Sing Up
 	function toggleAuth() {
@@ -162,12 +161,12 @@
 					/>
 				</div>
 			{/if}
-			
+
 			<button
+				onclick={Register}
 				class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
 				>SUBMIT</button
 			>
-
 		</div>
 	</section>
 {/if}
@@ -196,20 +195,26 @@
 			{#if loginStatus}
 				<a
 					class="rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
-					href="/projects">Upload</a
+					href="/publish-new-project">Upload</a
 				>
 				<button class="cursor-pointer"><span class="material-icons">notifications</span></button>
 				<button class="cursor-pointer"><span class="material-icons">settings</span></button>
 			{:else}
 				<button
 					id="registerID"
-					onclick={() => { toggleForm(); authType = true; }}
+					onclick={() => {
+						toggleForm();
+						authType = true;
+					}}
 					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
 					>Sing In</button
 				>
 				<button
 					id="loginID"
-					onclick={() => { toggleForm(); authType = false; }}
+					onclick={() => {
+						toggleForm();
+						authType = false;
+					}}
 					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
 					>Sing Up</button
 				>
@@ -241,7 +246,10 @@
 		{:else}
 			<button
 				id="registerID"
-				onclick={() => { toggleForm(); authType = true; }}
+				onclick={() => {
+					toggleForm();
+					authType = true;
+				}}
 				class="f1 cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
 				>START NOW</button
 			>
@@ -353,4 +361,3 @@
 		</div>
 	</div>
 </section>
-
