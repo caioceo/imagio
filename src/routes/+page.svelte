@@ -9,6 +9,8 @@
 	let password: string = $state('');
 	let loginStatus: boolean = $state(false);
 	let errorMsg: string = $state('');
+	let showForm: boolean = $state(false);
+	let authType: boolean = $state(true);
 
 	onMount(() => {
 		loginStatus = localStorage.getItem('login') === 'true';
@@ -61,8 +63,7 @@
 
 	// FORMULARIO
 
-	let showForm: boolean = $state(false);
-
+	
 	function toggleForm() {
 		showForm = !showForm;
 		if (showForm) {
@@ -73,8 +74,7 @@
 	function toggleAuth() {
 		authType = !authType;
 	}
-
-	let authType: boolean = $state(true);
+	
 </script>
 
 <!-- FORMULARIO -->

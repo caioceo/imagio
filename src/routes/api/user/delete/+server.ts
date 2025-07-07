@@ -1,8 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '$lib/server/prisma';
 import type { RequestHandler } from '@sveltejs/kit';
 import bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
 
