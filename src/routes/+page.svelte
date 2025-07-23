@@ -108,7 +108,7 @@
 			</div>
 
 			<hr
-				class="h-[1px] border-0 bg-gradient-to-r from-transparent via-black to-transparent shadow-2xl"
+				class="h-[1px] border-0 bg-gradient-to-r from-transparent via-black to-transparent shadow-2xl mb-3"
 			/>
 
 			{#if authType}
@@ -200,7 +200,7 @@
 			{#if loginStatus}
 				<a
 					class="rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
-					href="/publish-new-project">Upload</a
+					href="/[username]/project/new">Upload</a
 				>
 				<a
 					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
