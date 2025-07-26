@@ -3,10 +3,14 @@
 	import { onMount } from 'svelte';
 
 	let search: string = $state('');
-	let name: string = $state('');
-	let username: string = $state('');
-	let email: string = $state('');
-	let password: string = $state('');
+
+	let user = $state({
+		name:'',
+		username:'',
+		email:'',
+		password:''
+	})
+
 	let loginStatus: boolean = $state(false);
 	let errorMsg: string = $state('');
 	let showForm: boolean = $state(false);
@@ -14,15 +18,27 @@
 
 	onMount(() => {
 		loginStatus = localStorage.getItem('login') === 'true';
+		const userAux = localStorage.getItem('user')
+
+		if (userAux === null) {
+			user = {
+				name:'',
+				username:'',
+				email:'',
+				password:''
+			}
+			return
+		}
+		user = JSON.parse(userAux)
 	});
 
 	async function Register() {
 		const userInfo = new FormData();
 
-		userInfo.append('email', email);
-		userInfo.append('name', name);
-		userInfo.append('username', username);
-		userInfo.append('password', password);
+		userInfo.append('email', user.email);
+		userInfo.append('name', user.name);
+		userInfo.append('username', user.username);
+		userInfo.append('password', user.password);
 
 		const reply = await fetch('api/user/register', {
 			method: 'POST',
@@ -39,8 +55,8 @@
 	async function Login() {
 		const tryLogin = new FormData();
 
-		tryLogin.append('email', email);
-		tryLogin.append('password', password);
+		tryLogin.append('email', user.email);
+		tryLogin.append('password', user.password);
 
 		const reply = await fetch('api/user/login', {
 			method: 'POST',
@@ -49,15 +65,19 @@
 
 		const result = await reply.json();
 
+		console.log(result)
+
 		if (result.success) {
 			toggleForm();
 			localStorage.setItem('login', 'true');
+			localStorage.setItem('user', JSON.stringify(result.userID))
 			loginStatus = true;
 		} else errorMsg = result.error;
 	}
 
 	function Logout() {
 		localStorage.setItem('login', 'false');
+		localStorage.removeItem('user')
 		loginStatus = false;
 	}
 
@@ -117,7 +137,7 @@
 					<input
 						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="text"
-						bind:value={name}
+						bind:value={user.name}
 					/>
 				</div>
 				<div class="grid gap-y-2">
@@ -125,7 +145,7 @@
 					<input
 						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="text"
-						bind:value={username}
+						bind:value={user.username}
 					/>
 				</div>
 				<div class="grid gap-y-2">
@@ -133,7 +153,7 @@
 					<input
 						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="email"
-						bind:value={email}
+						bind:value={user.email}
 					/>
 				</div>
 				<div class="grid gap-y-2">
@@ -141,7 +161,7 @@
 					<input
 						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="password"
-						bind:value={password}
+						bind:value={user.password}
 					/>
 				</div>
 				<button
@@ -155,7 +175,7 @@
 					<input
 						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="email"
-						bind:value={email}
+						bind:value={user.email}
 					/>
 				</div>
 				<div class="grid gap-y-2">
@@ -163,7 +183,7 @@
 					<input
 						class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 						type="password"
-						bind:value={password}
+						bind:value={user.password}
 					/>
 				</div>
 				<button
@@ -200,7 +220,7 @@
 			{#if loginStatus}
 				<a
 					class="rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
-					href="/[username]/project/new">Upload</a
+					href="/{user.username}/project/new">Upload</a
 				>
 				<a
 					class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
@@ -247,7 +267,7 @@
 		{#if loginStatus}
 			<a
 				class="f1 cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
-				href="/projects/new-submit">PUBLISH NOW</a
+				href="{user.username}/project/new">PUBLISH NOW</a
 			>
 		{:else}
 			<button

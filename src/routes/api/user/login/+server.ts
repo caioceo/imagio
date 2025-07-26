@@ -1,9 +1,8 @@
 import { prisma } from '$lib/server/prisma';
-
 import type { RequestHandler } from '@sveltejs/kit';
 import bcrypt from 'bcrypt';
 
-export const POST: RequestHandler = async ({ request, cookies }) => {
+export const POST: RequestHandler = async ({ request }) => {
 
     const formData = await request.formData();
 
@@ -38,14 +37,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
         return new Response(JSON.stringify({ success: false }), { status: 409 });
     }
     else {
-        cookies.set('auth_token', userID.id, {
-            path: '/',
-            httpOnly: true,
-            sameSite: 'strict',
-            maxAge: 3600 * 24 * 30
-        });
-        console.log("successful login")
-        return new Response(JSON.stringify({ success: true }), { status: 201 });
+        return new Response(JSON.stringify({ success: true, userID }), { status: 201 });
     }
 };
 

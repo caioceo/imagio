@@ -1,55 +1,87 @@
 <script lang="ts">
-	import { applyAction } from '$app/forms';
 
-	let name: string = $state('');
-	let desc: string = $state('');
-	let link1: string | null = $state(null);
-	let link2: string | null = $state(null);
+	// TODO: validação on change dos input e na hora de enviar
+	import { onMount } from 'svelte';
 
-	let img : string[] = $state([
-		'https://static.vecteezy.com/ti/vetor-gratis/p1/4640699-circle-upload-icon-button-isolated-on-white-background-vetor.jpg',
-		'https://static.vecteezy.com/ti/vetor-gratis/p1/4640699-circle-upload-icon-button-isolated-on-white-background-vetor.jpg',
-		'https://static.vecteezy.com/ti/vetor-gratis/p1/4640699-circle-upload-icon-button-isolated-on-white-background-vetor.jpg'
-	]);
+	type Project = {
+		name: string;
+		desc: string;
+		links: string[];
+		imgs: FileList | null;
+	};
 
-	let file: File | null = $state(null);
-	let i = 0;
-	async function uploadToFile (event: Event){
-		const input = event.target as HTMLInputElement;
-		let image = input.files?.[0] || null;
-		
-		if(!image) return;
-		const form = new FormData();
-		form.append('file', image);
+	let project: Project = $state({
+		name: '',
+		desc: '',
+		links: [],
+		imgs: null
+	});
 
+	let imagesDisplay: { file: File; url: string }[] = $state([]);
 
-		try {
-			const res = await fetch('api/project/create/upload_image', {
-			method: 'POST',
-			body: form
-		});
-
-		if (!res.ok) throw new Error('Upload falhou');
-
-		const data = await res.json();
-			const link = data.link;
-		
-		img[i]=link;
-		img = [...img];
-		i++;
-
-		} catch (error) {
-			console.error('Erro no upload:', error);
-		}
-		
+	function deleteDisplayImage(file: File) {
+		imagesDisplay = imagesDisplay.filter((i) => i.file.name !== file.name);
 	}
 
+	function onUpload() {
+		if (!project.imgs) {
+			return;
+		}
+		Array.from(project.imgs).forEach((file) => {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				imagesDisplay = [
+					...imagesDisplay,
+					{
+						file,
+						url: e.target?.result as string
+					}
+				];
+			};
+			reader.readAsDataURL(file);
+		});
+	}
+
+	let user: { id: string } | undefined = $state();
+
+	onMount(() => {
+		const userStr = localStorage.getItem('user');
+		user = userStr ? JSON.parse(userStr) : null;
+	});
+
+	let estaCarregando = $state(false)
+
+	async function create() {
+		estaCarregando = true
+		if (!user) {
+			return;
+		}
+		try {
+			const request = await fetch('/api/project/create', {
+				method: 'POST',
+				body: JSON.stringify({
+					name: project.name,
+					desc: project.desc,
+					userID: user.id,
+					links: project.links,
+					images: imagesDisplay.map((img) => img.url)
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			const result = await request.json();
+			console.log(result);
+			if (result.success) {
+			}
+		} catch (error) {
+			console.log(error)
+		} finally {
+			estaCarregando = false
+		}
+	}
 </script>
-
-<!-- FAZER UM GET NO BACKEND QUE VERIFIQUE QUANTOS PROJETOS JA EXISTEM PARA VALIDAR CRIAÇÃO DE NOVO PROJETO -->
-
-<!-- Usuario vai fazer input na imagem, vou fazer post que faça validação e retorne link para exibição-->
-<!-- each na exibição das imagens -->
 
 <section class="modal-overlay fixed inset-0 flex items-center justify-center">
 	<div class="grid h-auto w-[600px] gap-y-2 rounded-xl bg-white p-6 shadow-2xl">
@@ -67,6 +99,7 @@
 		<div class="grid gap-y-2">
 			<label for="name">Project Name</label>
 			<input
+				bind:value={project.name}
 				class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 				type="text"
 			/>
@@ -74,7 +107,7 @@
 		<div class="grid gap-y-2">
 			<label for="desc">Describe your project</label>
 			<textarea
-				id="desc"
+				bind:value={project.desc}
 				class="min-h-[100px] w-full resize-y rounded-xl border border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 				placeholder="Describe your project here..."
 			></textarea>
@@ -86,19 +119,28 @@
 				class="w-1/3 rounded-xl border-1 border-gray-700 bg-zinc-100 px-3 py-1 outline-none"
 				type="file"
 				accept="image/*"
-				onchange={uploadToFile}
+				multiple
+				bind:files={project.imgs}
+				onchange={onUpload}
 			/>
 			<!-- value faltando acima -->
 			<div class="grid grid-cols-3 gap-3">
-				<div class="overflow-hidden rounded-2xl">
-					<img class="h-40 w-full object-cover" src={img[0]} alt="" />
-				</div>
-				<div class="overflow-hidden rounded-2xl">
-					<img class="h-40 w-full object-cover" src={img[1]} alt="" />
-				</div>
-				<div class="overflow-hidden rounded-2xl">
-					<img class="h-40 w-full object-cover" src={img[2]} alt="" />
-				</div>
+				{#each imagesDisplay as im}
+					<div class="rounded-2xl">
+						<button
+							onclick={() => {
+								deleteDisplayImage(im.file);
+							}}
+							class="group relative"
+						>
+							<img class="h-40 w-full rounded-2xl object-cover" src={im.url} alt="" />
+							<span
+								class="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/20 text-2xl font-bold text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+								>x</span
+							>
+						</button>
+					</div>
+				{/each}
 			</div>
 		</div>
 
@@ -107,13 +149,13 @@
 			<input
 				class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 				type="text"
-				bind:value={link1}
+				bind:value={project.links[0]}
 				placeholder="First link"
 			/>
 			<input
 				class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
 				type="text"
-				bind:value={link2}
+				bind:value={project.links[1]}
 				placeholder="Second link"
 			/>
 		</div>
@@ -127,6 +169,7 @@
 			/>
 		</div>
 		<button
+			onclick={create}
 			class="f1 mt-6 w-full cursor-pointer rounded-xl bg-black py-4 text-center text-2xl font-extrabold text-white"
 			>PUBLISH NOW</button
 		>
