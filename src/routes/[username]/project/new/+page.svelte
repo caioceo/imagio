@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { redirect } from '@sveltejs/kit';
+	import { goto } from '$app/navigation';
 
-	// TODO: validação on change dos input e na hora de enviar
+
+	// TODO: input de colaboradores deve entrar em um array de string, ou seja, fazer um split por virgula/espaço e adicionar ao array.
 	import { onMount } from 'svelte';
 
 	type Project = {
@@ -8,13 +11,17 @@
 		desc: string;
 		links: string[];
 		imgs: FileList | null;
+		helpers: string[];
+		ytURL: string;
 	};
 
 	let project: Project = $state({
 		name: '',
 		desc: '',
 		links: [],
-		imgs: null
+		imgs: null,
+		helpers: [],
+		ytURL: ''
 	});
 
 	let imagesDisplay: { file: File; url: string }[] = $state([]);
@@ -63,7 +70,9 @@
 					name: project.name,
 					desc: project.desc,
 					userID: user.id,
+					ytURL: project.ytURL,
 					links: project.links,
+					helpers: project.helpers,	
 					images: imagesDisplay.map((img) => img.url)
 				}),
 				headers: {
@@ -74,6 +83,7 @@
 			const result = await request.json();
 			console.log(result);
 			if (result.success) {
+				goto("/")
 			}
 		} catch (error) {
 			console.log(error)
@@ -123,7 +133,6 @@
 				bind:files={project.imgs}
 				onchange={onUpload}
 			/>
-			<!-- value faltando acima -->
 			<div class="grid grid-cols-3 gap-3">
 				{#each imagesDisplay as im}
 					<div class="rounded-2xl">
@@ -157,6 +166,13 @@
 				type="text"
 				bind:value={project.links[1]}
 				placeholder="Second link"
+			/>
+
+			<input
+				class="w-full rounded-xl border-1 border-gray-700 bg-zinc-100 px-5 py-2 outline-none"
+				type="text"
+				bind:value={project.ytURL}
+				placeholder="Youtube video apresentation of your project"
 			/>
 		</div>
 
