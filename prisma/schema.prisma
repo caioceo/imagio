@@ -20,41 +20,43 @@ enum Plano {
 }
 
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  email     String    @unique
-  name      String
-  username  String    @unique
-  password  String
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  email    String @unique
+  name     String
+  username String @unique
+  password String
 
-  plano     String     @default("free")
-  url1      String?
-  url2      String?
+  plano String  @default("free")
+  url1  String?
+  url2  String?
 
-// apenas indica que o User tem uma relação 1:N, ou seja um user pode ter varios projetos
-  projects  Project[]
+  profilePic String @default("https://static.vecteezy.com/ti/vetor-gratis/p1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg")
+
+  // apenas indica que o User tem uma relação 1:N, ou seja um user pode ter varios projetos
+  projects Project[]
 }
 
 model Project {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  desc        String
-  link1       String?
-  link2       String?
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name  String
+  desc  String
+  ytID String?
+  link1 String?
+  link2 String?
 
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String   @db.ObjectId
+  helpers String[] @db.ObjectId
 
-//indica que um projeto pode ter varias imagens 1:N
-  images      Image[]
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
+
+  //indica que um projeto pode ter varias imagens 1:N
+  images Image[]
 }
-
 
 model Image {
-  imageId    String   @id @default(auto()) @map("_id") @db.ObjectId
-  url        String
+  imageId String @id @default(auto()) @map("_id") @db.ObjectId
+  url     String
 
-  project    Project  @relation(fields: [projectId], references: [id])
-  projectId  String   @db.ObjectId
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String  @db.ObjectId
 }
-
-
