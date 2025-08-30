@@ -23,8 +23,6 @@
 			/>
 		</div>
 
-		<!-- TODO: passar funções de login/form para componentes e declarar variaveis globais -->
-
 		<div class="flex gap-2">
 			<a
 				class="rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
@@ -32,7 +30,7 @@
 			>
 			<a
 				class="cursor-pointer rounded-xl bg-black px-5 py-2 text-white transition-all hover:text-white"
-				href="/">My space</a
+				href="/{projeto.user.username}">My space</a
 			>
 		</div>
 	</nav>
@@ -74,7 +72,7 @@
 </section>
 
 {#if projeto.ytID}
-	<section class="p-14 bg-neutral-300 ">
+	<section class="p-14 bg-gray-100">
 		<div class="container mx-auto flex justify-center">
 			<iframe
 				class="rounded-xl"
